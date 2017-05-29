@@ -166,13 +166,17 @@ class GoogleApi(object):
         """Admin SDK v1"""
         return GoogleApi("admin", "directory_v1", scopes=["https://www.googleapis.com/auth/admin.directory.user"])
 
+
 class MethodHelper(object):
     """ helper to streamline api calls"""
 
-    def __init__(self, google_api, service, name=None, *args, **kwargs):
+    def __init__(self, google_api, service, name=None, path=[], *args, **kwargs):
         self.google_api = google_api
         self.service = service
         self.name = name
+        self.path = path
+        if name is not None:
+            self.path.append(name)
         # self.log = logging.getLogger("MethodHelper")
         # self.log.info("constructor %s", name)
 
@@ -181,7 +185,7 @@ class MethodHelper(object):
         # self.log.info("execute %s", self.name)
         return self.google_api.retry(self.service)
 
-    def _call(self, *args, **kwargs):
+    def call(self, *args, **kwargs):
         """ helper to call to service """
         # self.log.info("call %s", self.name)
         return MethodHelper(self.google_api, getattr(self.service, self.name)(*args, **kwargs))
@@ -189,4 +193,7 @@ class MethodHelper(object):
     def __getattr__(self, name):
         """ get service method """
         # self.log.info("getattr %s", name)
-        return MethodHelper(self.google_api, self.service, name)._call
+        if not hasattr(self.service, name):
+            err_msg = u"API method {} unknown on {} {}".format(u".".join(self.path + [name]), self.google_api.api, self.google_api.api_version)
+            raise RuntimeError(err_msg)
+        return MethodHelper(self.google_api, self.service, name, self.path).call
