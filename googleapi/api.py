@@ -170,23 +170,34 @@ class GoogleApi(object):
 class MethodHelper(object):
     """ helper to streamline api calls"""
 
-    def __init__(self, google_api, service, name=None, path=[], *args, **kwargs):
+    def __init__(self, google_api, service, name=None, path=None):
+        """
+        create a method helper
+        :param google_api GoogleApi instance of api
+        :param service Google API service (GoogleApi.service) or method of it
+        :param name method name
+        :param path API path i.e. for compute: instances.list
+        """
         self.google_api = google_api
         self.service = service
         self.name = name
-        self.path = path
+        self.path = path if path is not None else []
         if name is not None:
             self.path.append(name)
         # self.log = logging.getLogger("MethodHelper")
         # self.log.info("constructor %s", name)
 
     def execute(self, *args, **kwargs):
-        """ execute service api """
+        """execute service api"""
         # self.log.info("execute %s", self.name)
         return self.google_api.retry(self.service)
 
     def call(self, *args, **kwargs):
-        """ helper to call to service """
+        """
+        wrapper for service methods
+        this wraps an GoogleApi.service call so the next level can also use helpers
+        i.e. for compute v1 api GoogleApi.service.instances() can be used as Google.instances() and will return a MethodHelper instance
+        """
         # self.log.info("call %s", self.name)
         return MethodHelper(self.google_api, getattr(self.service, self.name)(*args, **kwargs))
 
