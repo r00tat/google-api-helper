@@ -149,10 +149,7 @@ class GoogleApi(object):
         :param name: attribute / service name
         :return:
         """
-        if name in self.__dict__.keys():
-            return self.__dict__[name]
-        else:
-            return getattr(self.service, name)
+        return getattr(MethodHelper(self, self.service), name)
 
     @classmethod
     def compute(cls):
@@ -168,3 +165,28 @@ class GoogleApi(object):
     def admin_sdk(cls):
         """Admin SDK v1"""
         return GoogleApi("admin", "directory_v1", scopes=["https://www.googleapis.com/auth/admin.directory.user"])
+
+class MethodHelper(object):
+    """ helper to streamline api calls"""
+
+    def __init__(self, google_api, service, name=None, *args, **kwargs):
+        self.google_api = google_api
+        self.service = service
+        self.name = name
+        # self.log = logging.getLogger("MethodHelper")
+        # self.log.info("constructor %s", name)
+
+    def execute(self, *args, **kwargs):
+        """ execute service api """
+        # self.log.info("execute %s", self.name)
+        return self.google_api.retry(self.service)
+
+    def _call(self, *args, **kwargs):
+        """ helper to call to service """
+        # self.log.info("call %s", self.name)
+        return MethodHelper(self.google_api, getattr(self.service, self.name)(*args, **kwargs))
+
+    def __getattr__(self, name):
+        """ get service method """
+        # self.log.info("getattr %s", name)
+        return MethodHelper(self.google_api, self.service, name)._call
