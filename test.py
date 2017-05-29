@@ -21,6 +21,8 @@ def main():
     log.info("instances: %s", json.dumps(instances, indent=2))
     instances = compute_api.instances().list(project=args.project, zone=args.zone).execute()
     log.info("instances shortcut: %s", json.dumps(instances, indent=2))
+    instances = compute_api.instances().list_all(project=args.project, zone=args.zone)
+    log.info("list all: %s", json.dumps(instances, indent=2))
 
 
 if __name__ == '__main__':

@@ -190,6 +190,23 @@ class MethodHelper(object):
         # self.log.info("call %s", self.name)
         return MethodHelper(self.google_api, getattr(self.service, self.name)(*args, **kwargs))
 
+    def list_all(self, return_element="items", *args, **kwargs):
+        """
+        list all elements of a type
+        make sure you got enough memory to receive all elements
+        pagination (https://developers.google.com/api-client-library/python/guide/pagination) should always be preferred over this helper
+
+        :param return_element name of the element containing a list of items
+        """
+        request = self.service.list(**kwargs)
+        all_elements = []
+        while request is not None:
+            elements = self.google_api.retry(request)
+            all_elements.extend(elements.get(return_element, []))
+            request = self.service.list_next(request, elements)
+
+        return all_elements
+
     def __getattr__(self, name):
         """ get service method """
         # self.log.info("getattr %s", name)
