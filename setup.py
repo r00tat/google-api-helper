@@ -14,7 +14,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='pygapi',
-    version='0.0.1',
+    version='0.1.0',
 
     description='Python helper class to streamlime interaction with Google APIs. Based on python-google-api-client.',
     long_description=long_description,
