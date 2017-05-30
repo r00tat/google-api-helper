@@ -37,6 +37,54 @@ python-google-api-client also got retries for server errors included, but not fo
   # wrapper including retries for rate limiting and server side errors 
   compute.instances().list(project="my-gcp-project", zone="europe-west1-d").execute()
 
+Installation
+--------
+
+Add `google-api-helper` to your requirements.txt or your module requirements or install via pip:
+
+.. code-block:: bash
+
+  pip install google-api-helper
+
+
+Quickstart
+--------
+
+Import GoogleApi in your python code
+
+.. code-block:: python
+
+  from googleapi import GoogleApi
+  
+Create the api from a factory method or specify it by yourself:
+
+.. code-block:: python
+
+  compute = GoogleApi.compute()
+  drive = GoogleApi.drive()
+  gmail = GoogleApi("gmail", "v1", ["https://mail.google.com/"])
+
+Authenticate with oauth2
+
+.. code-block:: python
+
+  # use Compute Engine or App Engine default credentials
+  compute.with_application_credentials()
+  # use a service account to access a users drive
+  drive.with_service_account_file("service_account.json", "test@example.com")
+  # or run a oauth2 flow to ask the user for credentials
+  gmail.with_oauth2_flow("client_secret.json")
+
+
+And call the api
+
+.. code-block:: python
+
+  instances = compute.instances().list(project="project-id", zone="europe-west1-d").execute()
+  drive_files = drive.files().list(q="name='test'").execute()
+  messages = gmail.users().messages().list(userId="me").execute()
+
+
 Building and publishing
 --------
 
