@@ -154,17 +154,22 @@ class GoogleApi(object):
     @classmethod
     def compute(cls):
         """compute v1 api"""
-        return GoogleApi("compute", "v1", scopes=["https://www.googleapis.com/auth/compute"])
+        return GoogleApi("compute", "v1", ["https://www.googleapis.com/auth/compute"])
 
     @classmethod
     def drive(cls):
         """drive v1 api"""
-        return GoogleApi("drive", "v3", scopes=["https://www.googleapis.com/auth/drive"])
+        return GoogleApi("drive", "v3", ["https://www.googleapis.com/auth/drive"])
 
     @classmethod
     def admin_sdk(cls):
         """Admin SDK v1"""
-        return GoogleApi("admin", "directory_v1", scopes=["https://www.googleapis.com/auth/admin.directory.user"])
+        return GoogleApi("admin", "directory_v1", ["https://www.googleapis.com/auth/admin.directory.user"])
+
+    @classmethod
+    def gmail(cls):
+        """Gmail v1"""
+        return GoogleApi("gmail", "v1", ["https://mail.google.com/"])
 
 
 class MethodHelper(object):
