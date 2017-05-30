@@ -17,7 +17,7 @@ With google-api-helper that's a oneliner:
 .. code-block:: python
 
   from googleapi import GoogleApi
-  compute = GoogleApi.compute().with_service_account("service_account.json")
+  compute = GoogleApi.compute().with_service_account_file("service_account.json")
 
 also using the OAUTH2 flow is simple
 
@@ -33,7 +33,7 @@ python-google-api-client also got retries for server errors included, but not fo
   from googleapi import GoogleApi
   compute = GoogleApi.compute().with_oauth2_flow("client_secret.json")
   # directly using the api service without retries
-  compute_api.service.instances().list(project="my-gcp-project", zone="europe-west1-d").execute()
+  compute.service.instances().list(project="my-gcp-project", zone="europe-west1-d").execute()
   # wrapper including retries for rate limiting and server side errors 
   compute.instances().list(project="my-gcp-project", zone="europe-west1-d").execute()
 
