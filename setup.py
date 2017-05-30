@@ -9,11 +9,11 @@ from setuptools import setup, find_packages
 
 here = path.abspath(path.dirname(__file__))
 
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='pygapi',
+    name='google-api-helper',
     version='0.1.0',
 
     description='Python helper class to streamlime interaction with Google APIs. Based on python-google-api-client.',
