@@ -1,6 +1,6 @@
-===== 
+==========================================
 google-api-helper Python Google API helper
-===== 
+==========================================
 
 google-api-helper helps streamline access to google apis including authentication using oauth2 and factory methods to create an API service. I.e. creating a compute API service is not to bad but still needs some code:
 
@@ -38,7 +38,7 @@ python-google-api-client also got retries for server errors included, but not fo
   compute.instances().list(project="my-gcp-project", zone="europe-west1-d").execute()
 
 Installation
---------
+------------
 
 Add `google-api-helper` to your requirements.txt or your module requirements or install via pip:
 
@@ -48,7 +48,7 @@ Add `google-api-helper` to your requirements.txt or your module requirements or 
 
 
 Quickstart
---------
+----------
 
 Import GoogleApi in your python code
 
@@ -86,7 +86,7 @@ And call the api
 
 
 Building and publishing
---------
+-----------------------
 
 .. code-block:: bash
 
