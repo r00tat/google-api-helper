@@ -71,12 +71,14 @@ class GoogleApi(object):
     def with_service_account_file(self, service_account_file, sub=None):
         """use service account credentials"""
         self.credentials = authorize_service_account_file(service_account_file, self.scopes, sub)
+        self._service = None
         return self
 
     def with_service_account(self, service_account, sub=None):
         """use service account credentials"""
         self.credentials = authorize_service_account(service_account, self.scopes, sub)
         self.sub = sub
+        self._service = None
         return self
 
     def with_oauth2_flow(self, client_secret_file, local_webserver=False, **kwargs):
@@ -96,11 +98,13 @@ class GoogleApi(object):
             client_secret_file, self.scopes,
             credential_cache_file=(self.cache_dir + os.path.sep + self.credential_cache_file),
             flow_params=flow_params)
+        self._service = None
         return self
 
     def with_application_credentials(self):
         """ use GCE or GAE default credentials"""
         self.credentials = GoogleCredentials.get_application_default()
+        self._service = None
         return self
 
     def delegate(self, sub):
