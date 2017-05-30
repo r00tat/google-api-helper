@@ -18,7 +18,7 @@ setup(
 
     description='Python helper class to streamlime interaction with Google APIs. Based on python-google-api-client.',
     long_description=long_description,
-    url='https://github.com/paulwoelfel/pygapi',
+    url='https://github.com/Zirrus/google-api-helper',
 
     # Author details
     author='Paul Woelfel',
