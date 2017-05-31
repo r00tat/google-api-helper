@@ -101,6 +101,19 @@ class GoogleApi(object):
         self._service = None
         return self
 
+    def clear_cache(self):
+        """
+        remove cache file
+
+        @returns GoogleApi self
+        """
+        if self.credential_cache_file is None:
+            self.credential_cache_file = u"credential_cache_{}_{}_{}.json".format(self.api, self.api_version, self.sub)
+        cache_file = os.path.join(self.cache_dir, self.credential_cache_file)
+        if os.path.isfile(cache_file):
+            os.remove(cache_file)
+        return self
+
     def with_application_credentials(self):
         """ use GCE or GAE default credentials"""
         self.credentials = GoogleCredentials.get_application_default()
