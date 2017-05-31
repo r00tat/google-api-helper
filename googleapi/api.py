@@ -168,14 +168,14 @@ class GoogleApi(object):
         return getattr(MethodHelper(self, self.service), name)
 
     @classmethod
-    def compute(cls):
+    def compute(cls, version="v1"):
         """compute v1 api"""
-        return GoogleApi("compute", "v1", ["https://www.googleapis.com/auth/compute"])
+        return GoogleApi("compute", version, ["https://www.googleapis.com/auth/compute"])
 
     @classmethod
-    def drive(cls):
-        """drive v1 api"""
-        return GoogleApi("drive", "v3", ["https://www.googleapis.com/auth/drive"])
+    def drive(cls, version="v3"):
+        """drive v3 api"""
+        return GoogleApi("drive", version, ["https://www.googleapis.com/auth/drive"])
 
     @classmethod
     def admin_sdk(cls):
@@ -183,9 +183,122 @@ class GoogleApi(object):
         return GoogleApi("admin", "directory_v1", ["https://www.googleapis.com/auth/admin.directory.user"])
 
     @classmethod
-    def gmail(cls):
+    def gmail(cls, version="v1"):
         """Gmail v1"""
-        return GoogleApi("gmail", "v1", ["https://mail.google.com/"])
+        return GoogleApi("gmail", version, ["https://mail.google.com/"])
+
+    @classmethod
+    def reseller(cls, version="v1"):
+        """reseller v1"""
+        return GoogleApi("reseller", version, ["https://www.googleapis.com/auth/apps.order"])
+
+    @classmethod
+    def licensing(cls, version="v1"):
+        """license v1"""
+        return GoogleApi("licensing", version, ["https://www.googleapis.com/auth/apps.licensing"])
+
+    @classmethod
+    def appengine(cls, version="v1"):
+        """analytics v3"""
+        return GoogleApi(
+            "appengine", version, ["https://www.googleapis.com/auth/cloud-platform"],
+            discovery_url="https://appengine.googleapis.com/$discovery/rest?version={}".format(version))
+
+    @classmethod
+    def scripts(cls, version="v1"):
+        """scripts v1"""
+        return GoogleApi("scripts", version, ["https://www.googleapis.com/auth/userinfo.email"])
+
+    @classmethod
+    def cloudbilling(cls, version="v1"):
+        """cloudbilling v1"""
+        return GoogleApi("cloudbilling", version, ["https://www.googleapis.com/auth/cloud-billing"])
+
+    @classmethod
+    def cloudbuild(cls, version="v1"):
+        """cloudbuild v1"""
+        return GoogleApi("cloudbuild", version, ["https://www.googleapis.com/auth/cloud-platform"])
+
+    @classmethod
+    def dns(cls, version="v1"):
+        """dns v1"""
+        return GoogleApi("dns", version, ["https://www.googleapis.com/auth/ndev.clouddns.readwrite"])
+
+    @classmethod
+    def deploymentmanager(cls, version="v2"):
+        """deploymentmanager v2"""
+        return GoogleApi("deploymentmanager", version, ["https://www.googleapis.com/auth/cloud-platform"])
+
+    @classmethod
+    def cloudfunctions(cls, version="v1beta2"):
+        """cloudfunctions v1beta2"""
+        return GoogleApi("cloudfunctions", version, ["https://www.googleapis.com/auth/cloudfunctions"])
+
+    @classmethod
+    def cloudkms(cls, version="v1"):
+        """cloudkms v1"""
+        return GoogleApi("cloudkms", version, ["https://www.googleapis.com/auth/cloudkms"])
+
+    @classmethod
+    def ml(cls, version="v1"):
+        """ml v1"""
+        return GoogleApi("ml", version, ["https://www.googleapis.com/auth/cloud-platform"])
+
+    @classmethod
+    def container(cls, version="v1"):
+        """container v1"""
+        return GoogleApi(
+            "container", version, ["https://www.googleapis.com/auth/cloud-platform"])
+
+    @classmethod
+    def iam(cls, version="v1"):
+        """iam v1"""
+        return GoogleApi("iam", version, ["https://www.googleapis.com/auth/iam"])
+
+    @classmethod
+    def oauth(cls, version="v2"):
+        """oauth v2"""
+        return GoogleApi("oauth", version, ["https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile"])
+
+    @classmethod
+    def people(cls, version="v1"):
+        """people v1"""
+        return GoogleApi("people", version, ["email", "profile", "https://www.googleapis.com/auth/contacts"])
+
+    @classmethod
+    def sheets(cls, version="v4"):
+        """sheets v4"""
+        return GoogleApi("sheets", version, ["https://www.googleapis.com/auth/spreadsheets"])
+
+    @classmethod
+    def slides(cls, version="v1"):
+        """slides v1"""
+        return GoogleApi("slides", version, ["https://www.googleapis.com/auth/presentations"])
+
+    @classmethod
+    def plus(cls, version="v1"):
+        """plus v1"""
+        return GoogleApi("plus", version, ["email", "profile"])
+
+    @classmethod
+    def groupssettings(cls, version="v1"):
+        """groupssettings v1"""
+        return GoogleApi("groupssettings", version, ["https://www.googleapis.com/auth/apps.groups.settings"])
+
+    @classmethod
+    def tasks(cls, version="v1"):
+        """tasks v1"""
+        return GoogleApi("tasks", version, ["https://www.googleapis.com/auth/tasks"])
+
+    @classmethod
+    def urlshortener(cls, version="v1"):
+        """urlshortener v1"""
+        return GoogleApi("urlshortener", version, ["https://www.googleapis.com/auth/urlshortener"])
+
+    @classmethod
+    def youtube(cls, version="v3"):
+        """youtube v3"""
+        return GoogleApi("youtube", version, ["https://www.googleapis.com/auth/youtube"])
 
 
 class MethodHelper(object):
