@@ -188,6 +188,11 @@ class GoogleApi(object):
         return GoogleApi("gmail", version, ["https://mail.google.com/"])
 
     @classmethod
+    def calendar(cls, version="v3"):
+        """calendar v3"""
+        return GoogleApi("calendar", version, ["https://www.googleapis.com/auth/calendar"])
+
+    @classmethod
     def reseller(cls, version="v1"):
         """reseller v1"""
         return GoogleApi("reseller", version, ["https://www.googleapis.com/auth/apps.order"])
