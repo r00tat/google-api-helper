@@ -115,6 +115,18 @@ class GoogleApi(object):
         credentials = self.credentials.create_delegated(sub)
         return self.clone(credentials=credentials)
 
+    def scoped(self, scopes):
+        """
+        update scopes of GoogleApi
+        this also invalidates the service and credentials
+
+        @param scopes scopes used to fetch credentials
+        """
+        self.scopes = scopes
+        self.credentials = None
+        self.service = None
+        return self
+
     def retry(self, service_method, retry_count=0):
         """
         retry a google api call and check for rate limits
