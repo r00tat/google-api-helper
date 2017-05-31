@@ -206,8 +206,7 @@ class GoogleApi(object):
     def appengine(cls, version="v1"):
         """analytics v3"""
         return GoogleApi(
-            "appengine", version, ["https://www.googleapis.com/auth/cloud-platform"],
-            discovery_url="https://appengine.googleapis.com/$discovery/rest?version={}".format(version))
+            "appengine", version, ["https://www.googleapis.com/auth/cloud-platform"])
 
     @classmethod
     def scripts(cls, version="v1"):
