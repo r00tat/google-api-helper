@@ -14,15 +14,15 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='google-api-helper',
-    version='0.2.1',
+    version='0.2.2',
 
     description='Python helper class to streamlime interaction with Google APIs. Based on python-google-api-client.',
     long_description=long_description,
-    url='https://github.com/Zirrus/google-api-helper',
+    url='https://github.com/r00tat/google-api-helper',
 
     # Author details
     author='Paul Woelfel',
-    author_email='paul.woelfel@zirrus.eu',
+    author_email='github@frig.at',
 
     # Choose your license
     license='GNU GPL v3',

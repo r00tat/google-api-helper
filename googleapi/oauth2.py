@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 helper functions for oauth2
-
-@author: Paul Woelfel <paul.woelfel@zirrus.eu>
 """
 import json
 
