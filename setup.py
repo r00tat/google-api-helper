@@ -14,7 +14,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='google-api-helper',
-    version='0.2.2',
+    version='0.3.0',
     description=('Python helper class to streamlime interaction with Google APIs. '
                  'Based on python-google-api-client.'),
     long_description=long_description,
@@ -51,7 +51,7 @@ setup(
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
 
     #   py_modules=["my_module"],
-    install_requires=['google-api-python-client'],
+    install_requires=['google-api-python-client', 'google-auth', 'google-auth-oauthlib'],
     extras_require={
         'dev': [],
         'test': [],

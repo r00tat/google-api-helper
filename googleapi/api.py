@@ -6,12 +6,13 @@ import inspect
 import os
 import time
 
+import google.auth
+
 from googleapiclient import errors
 from googleapiclient.discovery import build, DISCOVERY_URI
 from googleapiclient.discovery_cache.base import Cache
-from oauth2client.client import GoogleCredentials
-from .oauth2 import (authorize_service_account, authorize_service_account_file,
-                     authorize_application)
+from google.oauth2 import service_account
+from .oauth2 import authorize_application
 
 
 class MemoryCache(Cache):
@@ -73,13 +74,26 @@ class GoogleApi(object):
 
     def with_service_account_file(self, service_account_file, sub=None):
         """use service account credentials"""
-        self.credentials = authorize_service_account_file(service_account_file, self.scopes, sub)
+        credentials = service_account.Credentials.from_service_account_file(service_account_file)
+        if self.scopes:
+            credentials = credentials.with_scopes(self.scopes)
+        if sub:
+            credentials = credentials.with_subject(sub)
+
+        self.credentials = credentials
         self._service = None
+        self.sub = sub
         return self
 
     def with_service_account(self, service_account, sub=None):
         """use service account credentials"""
-        self.credentials = authorize_service_account(service_account, self.scopes, sub)
+        credentials = service_account.Credentials.from_service_account_info(service_account)
+        if self.scopes:
+            credentials = credentials.with_scopes(self.scopes)
+        if sub:
+            credentials = credentials.with_subject(sub)
+
+        self.credentials = credentials
         self.sub = sub
         self._service = None
         return self
@@ -123,7 +137,9 @@ class GoogleApi(object):
 
     def with_application_credentials(self):
         """ use GCE or GAE default credentials"""
-        self.credentials = GoogleCredentials.get_application_default()
+        credentials, _ = google.auth.default()
+
+        self.credentials = credentials
         self._service = None
         return self
 

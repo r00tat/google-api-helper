@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """ python tests """
 import json
 import logging
