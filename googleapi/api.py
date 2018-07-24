@@ -4,14 +4,15 @@ import logging
 import json
 import inspect
 import os
+import time
 
-import httplib2
 from googleapiclient import errors
 from googleapiclient.discovery import build, DISCOVERY_URI
 from googleapiclient.discovery_cache.base import Cache
 from oauth2client.client import GoogleCredentials
-from oauth2client.service_account import ServiceAccountCredentials
-from .oauth2 import authorize_service_account, authorize_service_account_file, authorize_application
+from .oauth2 import (authorize_service_account, authorize_service_account_file,
+                     authorize_application)
+
 
 class MemoryCache(Cache):
     """ in meory cache """
@@ -27,6 +28,7 @@ class MemoryCache(Cache):
     def set(self, url, content):
         """ set cache """
         self.cache[url] = content
+
 
 program_memory_cache = MemoryCache()
 
@@ -51,7 +53,7 @@ class GoogleApi(object):
     def clone(self, **kwargs):
         """clone this object and overwrite some properties"""
         arguments = {}
-        for member in inspect.getmembers(self, lambda a: not(inspect.isroutine(a))):
+        for member in inspect.getmembers(self, lambda a: not (inspect.isroutine(a))):
             if not member[0].startswith("_"):
                 arguments[member[0]] = kwargs.get(member[0], member[1])
         return GoogleApi(**arguments)
@@ -61,7 +63,8 @@ class GoogleApi(object):
         """get or create a api service"""
         if self._service is None:
             self._service = build(
-                self.api, self.api_version,
+                self.api,
+                self.api_version,
                 credentials=self.credentials,
                 discoveryServiceUrl=self.discovery_url,
                 cache=program_memory_cache)
@@ -83,10 +86,12 @@ class GoogleApi(object):
 
     def with_oauth2_flow(self, client_secret_file, local_webserver=False, **kwargs):
         """try to get credentials from oauth2 flow"""
-        self.credential_cache_file = kwargs.get("credential_cache_file", self.credential_cache_file)
+        self.credential_cache_file = kwargs.get("credential_cache_file",
+                                                self.credential_cache_file)
         flow_params = kwargs.get("flow_params", [])
         if self.credential_cache_file is None:
-            self.credential_cache_file = u"credential_cache_{}_{}_{}.json".format(self.api, self.api_version, self.sub)
+            self.credential_cache_file = u"credential_cache_{}_{}_{}.json".format(
+                self.api, self.api_version, self.sub)
 
         if not os.path.isdir(self.cache_dir):
             os.makedirs(self.cache_dir)
@@ -95,8 +100,9 @@ class GoogleApi(object):
             flow_params.append('--noauth_local_webserver')
 
         self.credentials = authorize_application(
-            client_secret_file, self.scopes,
-            credential_cache_file=(self.cache_dir + os.path.sep + self.credential_cache_file),
+            client_secret_file,
+            self.scopes,
+            credential_cache_file=os.path.join(self.cache_dir, self.credential_cache_file),
             flow_params=flow_params)
         self._service = None
         return self
@@ -108,7 +114,8 @@ class GoogleApi(object):
         @returns GoogleApi self
         """
         if self.credential_cache_file is None:
-            self.credential_cache_file = u"credential_cache_{}_{}_{}.json".format(self.api, self.api_version, self.sub)
+            self.credential_cache_file = u"credential_cache_{}_{}_{}.json".format(
+                self.api, self.api_version, self.sub)
         cache_file = os.path.join(self.cache_dir, self.credential_cache_file)
         if os.path.isfile(cache_file):
             os.remove(cache_file)
@@ -123,7 +130,8 @@ class GoogleApi(object):
     def delegate(self, sub):
         """ create a credential delegation"""
         if not hasattr(self.credentials, 'create_delegated'):
-            raise RuntimeError("I do not know how to delegate the credentials, create_delegated method is missing on credentials")
+            raise RuntimeError(("I do not know how to delegate the credentials, ",
+                                "create_delegated method is missing on credentials"))
 
         credentials = self.credentials.create_delegated(sub)
         return self.clone(credentials=credentials)
@@ -156,19 +164,19 @@ class GoogleApi(object):
                 code = data['error']["code"]
                 message = data['error']['message']
                 reason = data['error']['errors'][0]['reason']
-            except:
+            except:  # noqa
                 pass
 
             if code == 403 and message == "Rate Limit Exceeded":
                 self.log.info("rate limit reached, sleeping for %s seconds", 2**retry_count)
                 time.sleep(2**retry_count)
-                ret = self.retry(service_method, retry_count+1)
+                ret = self.retry(service_method, retry_count + 1)
             else:
                 self.log.warn("got http error {} ({}): {}".format(code, reason, message))
                 raise
         except KeyboardInterrupt:
             raise
-        except:
+        except:  # noqa
             self.log.exception("Failed to execute api method")
             raise
         return ret
@@ -193,7 +201,8 @@ class GoogleApi(object):
     @classmethod
     def admin_sdk(cls):
         """Admin SDK v1"""
-        return GoogleApi("admin", "directory_v1", ["https://www.googleapis.com/auth/admin.directory.user"])
+        return GoogleApi("admin", "directory_v1",
+                         ["https://www.googleapis.com/auth/admin.directory.user"])
 
     @classmethod
     def gmail(cls, version="v1"):
@@ -218,8 +227,7 @@ class GoogleApi(object):
     @classmethod
     def appengine(cls, version="v1"):
         """analytics v3"""
-        return GoogleApi(
-            "appengine", version, ["https://www.googleapis.com/auth/cloud-platform"])
+        return GoogleApi("appengine", version, ["https://www.googleapis.com/auth/cloud-platform"])
 
     @classmethod
     def scripts(cls, version="v1"):
@@ -229,7 +237,8 @@ class GoogleApi(object):
     @classmethod
     def cloudbilling(cls, version="v1"):
         """cloudbilling v1"""
-        return GoogleApi("cloudbilling", version, ["https://www.googleapis.com/auth/cloud-billing"])
+        return GoogleApi("cloudbilling", version,
+                         ["https://www.googleapis.com/auth/cloud-billing"])
 
     @classmethod
     def cloudbuild(cls, version="v1"):
@@ -239,17 +248,20 @@ class GoogleApi(object):
     @classmethod
     def dns(cls, version="v1"):
         """dns v1"""
-        return GoogleApi("dns", version, ["https://www.googleapis.com/auth/ndev.clouddns.readwrite"])
+        return GoogleApi("dns", version,
+                         ["https://www.googleapis.com/auth/ndev.clouddns.readwrite"])
 
     @classmethod
     def deploymentmanager(cls, version="v2"):
         """deploymentmanager v2"""
-        return GoogleApi("deploymentmanager", version, ["https://www.googleapis.com/auth/cloud-platform"])
+        return GoogleApi("deploymentmanager", version,
+                         ["https://www.googleapis.com/auth/cloud-platform"])
 
     @classmethod
     def cloudfunctions(cls, version="v1beta2"):
         """cloudfunctions v1beta2"""
-        return GoogleApi("cloudfunctions", version, ["https://www.googleapis.com/auth/cloudfunctions"])
+        return GoogleApi("cloudfunctions", version,
+                         ["https://www.googleapis.com/auth/cloudfunctions"])
 
     @classmethod
     def cloudkms(cls, version="v1"):
@@ -264,8 +276,7 @@ class GoogleApi(object):
     @classmethod
     def container(cls, version="v1"):
         """container v1"""
-        return GoogleApi(
-            "container", version, ["https://www.googleapis.com/auth/cloud-platform"])
+        return GoogleApi("container", version, ["https://www.googleapis.com/auth/cloud-platform"])
 
     @classmethod
     def iam(cls, version="v1"):
@@ -275,12 +286,16 @@ class GoogleApi(object):
     @classmethod
     def oauth(cls, version="v2"):
         """oauth v2"""
-        return GoogleApi("oauth", version, ["https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile"])
+        return GoogleApi("oauth", version, [
+            "https://www.googleapis.com/auth/userinfo.email",
+            "https://www.googleapis.com/auth/userinfo.profile"
+        ])
 
     @classmethod
     def people(cls, version="v1"):
         """people v1"""
-        return GoogleApi("people", version, ["email", "profile", "https://www.googleapis.com/auth/contacts"])
+        return GoogleApi("people", version,
+                         ["email", "profile", "https://www.googleapis.com/auth/contacts"])
 
     @classmethod
     def sheets(cls, version="v4"):
@@ -300,7 +315,8 @@ class GoogleApi(object):
     @classmethod
     def groupssettings(cls, version="v1"):
         """groupssettings v1"""
-        return GoogleApi("groupssettings", version, ["https://www.googleapis.com/auth/apps.groups.settings"])
+        return GoogleApi("groupssettings", version,
+                         ["https://www.googleapis.com/auth/apps.groups.settings"])
 
     @classmethod
     def tasks(cls, version="v1"):
@@ -347,7 +363,8 @@ class MethodHelper(object):
         """
         wrapper for service methods
         this wraps an GoogleApi.service call so the next level can also use helpers
-        i.e. for compute v1 api GoogleApi.service.instances() can be used as Google.instances() and will return a MethodHelper instance
+        i.e. for compute v1 api GoogleApi.service.instances() can be used as Google.instances()
+        and will return a MethodHelper instance
         """
         # self.log.info("call %s", self.name)
         return MethodHelper(self.google_api, getattr(self.service, self.name)(*args, **kwargs))
@@ -356,7 +373,8 @@ class MethodHelper(object):
         """
         list all elements of a type
         make sure you got enough memory to receive all elements
-        pagination (https://developers.google.com/api-client-library/python/guide/pagination) should always be preferred over this helper
+        pagination (https://developers.google.com/api-client-library/python/guide/pagination)
+        should always be preferred over this helper
 
         :param return_element name of the element containing a list of items
         """
@@ -373,6 +391,7 @@ class MethodHelper(object):
         """ get service method """
         # self.log.info("getattr %s", name)
         if not hasattr(self.service, name):
-            err_msg = u"API method {} unknown on {} {}".format(u".".join(self.path + [name]), self.google_api.api, self.google_api.api_version)
+            err_msg = u"API method {} unknown on {} {}".format(
+                u".".join(self.path + [name]), self.google_api.api, self.google_api.api_version)
             raise RuntimeError(err_msg)
         return MethodHelper(self.google_api, self.service, name, self.path).call

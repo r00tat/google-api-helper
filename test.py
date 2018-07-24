@@ -5,6 +5,7 @@ import logging
 from argparse import ArgumentParser
 from googleapi.api import GoogleApi
 
+
 def main():
     """ tests """
     logging.basicConfig(level=logging.DEBUG)
@@ -17,7 +18,8 @@ def main():
     log.info("creating compute api")
     compute_api = GoogleApi.compute().with_oauth2_flow(args.client_secret)
     log.info("listing instances")
-    instances = compute_api.retry(compute_api.service.instances().list(project=args.project, zone=args.zone))
+    instances = compute_api.retry(compute_api.service.instances().list(
+        project=args.project, zone=args.zone))
     log.info("instances: %s", json.dumps(instances, indent=2))
     instances = compute_api.instances().list(project=args.project, zone=args.zone).execute()
     log.info("instances shortcut: %s", json.dumps(instances, indent=2))

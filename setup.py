@@ -15,8 +15,8 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 setup(
     name='google-api-helper',
     version='0.2.2',
-
-    description='Python helper class to streamlime interaction with Google APIs. Based on python-google-api-client.',
+    description=('Python helper class to streamlime interaction with Google APIs. '
+                 'Based on python-google-api-client.'),
     long_description=long_description,
     url='https://github.com/r00tat/google-api-helper',
 
@@ -34,10 +34,8 @@ setup(
         #   4 - Beta
         #   5 - Production/Stable
         'Development Status :: 3 - Alpha',
-
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Libraries',
-
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
 
         # Specify the Python versions you support here. In particular, ensure
@@ -49,22 +47,16 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
-
     keywords='google api python',
-
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
 
     #   py_modules=["my_module"],
-
     install_requires=['google-api-python-client'],
-
     extras_require={
         'dev': [],
         'test': [],
     },
-
     package_data={},
-
     data_files=[],
 
     # entry_points={
