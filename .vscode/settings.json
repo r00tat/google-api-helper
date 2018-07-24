@@ -1,0 +1,31 @@
+{
+  "editor.rulers": [
+    // 79,
+    99
+  ],
+  "javascript.format.enable": false,
+  "eslint.autoFixOnSave": true,
+  "editor.formatOnSave": true,
+  "python.formatting.provider": "yapf",
+  "python.linting.pylintEnabled": false,
+  "python.linting.flake8Enabled": true,
+  "editor.tabSize": 4,
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  "python.formatting.yapfArgs": [
+    // "-p",
+    "--style",
+    "{based_on_style:google,column_limit:99,indent_dictionary_value:true}"
+  ],
+  "files.associations": {
+    "*.js": "javascriptreact"
+  },
+  "jshint.enable": false,
+  "[javascript]": {
+    "editor.tabSize": 2
+  },
+  "[javascriptreact]": {
+    "editor.tabSize": 2
+  }
+}
