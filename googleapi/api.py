@@ -63,12 +63,11 @@ class GoogleApi(object):
     def service(self):
         """get or create a api service"""
         if self._service is None:
-            self._service = build(
-                self.api,
-                self.api_version,
-                credentials=self.credentials,
-                discoveryServiceUrl=self.discovery_url,
-                cache=program_memory_cache)
+            self._service = build(self.api,
+                                  self.api_version,
+                                  credentials=self.credentials,
+                                  discoveryServiceUrl=self.discovery_url,
+                                  cache=program_memory_cache)
 
         return self._service
 
@@ -113,11 +112,11 @@ class GoogleApi(object):
         if not local_webserver:
             flow_params.append('--noauth_local_webserver')
 
-        self.credentials = authorize_application(
-            client_secret_file,
-            self.scopes,
-            credential_cache_file=os.path.join(self.cache_dir, self.credential_cache_file),
-            flow_params=flow_params)
+        self.credentials = authorize_application(client_secret_file,
+                                                 self.scopes,
+                                                 credential_cache_file=os.path.join(
+                                                     self.cache_dir, self.credential_cache_file),
+                                                 flow_params=flow_params)
         self._service = None
         return self
 
@@ -183,7 +182,7 @@ class GoogleApi(object):
             except:  # noqa
                 pass
 
-            if code == 403 and message == "Rate Limit Exceeded":
+            if code == 403 and "rate limit exceeded" in message.lower():
                 self.log.info("rate limit reached, sleeping for %s seconds", 2**retry_count)
                 time.sleep(2**retry_count)
                 ret = self.retry(service_method, retry_count + 1)
@@ -407,7 +406,8 @@ class MethodHelper(object):
         """ get service method """
         # self.log.info("getattr %s", name)
         if not hasattr(self.service, name):
-            err_msg = u"API method {} unknown on {} {}".format(
-                u".".join(self.path + [name]), self.google_api.api, self.google_api.api_version)
+            err_msg = u"API method {} unknown on {} {}".format(u".".join(self.path + [name]),
+                                                               self.google_api.api,
+                                                               self.google_api.api_version)
             raise RuntimeError(err_msg)
         return MethodHelper(self.google_api, self.service, name, self.path).call
